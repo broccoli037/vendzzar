@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <base href="/public">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -164,41 +165,42 @@
                 </div>
                 @endif
                 <div class="div_center">
-                    <h2 class="h2font">Add Product</h2>
+                    <h2 class="h2font">Update Product</h2>
                     <br>
-                    <form action="{{url('/add_product')}}"method="POST"enctype="multipart/form-data">
+                    <form action="{{url('/updateproduct_confirm',$product->id)}}"method="POST"enctype="multipart/form-data">
                         @csrf
                         <div class="div_design">
                             <label for="title">Product Title:</label>
-                            <input type="text" name="title" placeholder="Add title" required><br>
+                            <input type="text" name="title" placeholder="Add title" value="{{$product->title}}"><br>
                         </div>
                         
                         <div class="div_design">
                             <label for="price">Price (in Rs.):</label>
-                            <input id="price" type="number" name="price" placeholder="Price" required><br>
+                            <input id="price" type="number" name="price" placeholder="Price" value="{{$product->price}}" required><br>
                         </div>
                         <div class="div_design">
                             <label for="quantity">Quantity:</label>
-                            <input type="number" name="quantity" min="0" placeholder="In stock quantity"required><br>
+                            <input type="number" name="quantity" min="0" placeholder="In stock quantity" value="{{$product->quantity}}"required><br>
                         </div>
                         <div class="div_design">
                             <label for="dis">Discounted price:</label>
-                            <input type="number" name="dis" placeholder="Discounted price"><br>
+                            <input type="number" name="dis" placeholder="Discounted price"value="{{$product->discount_price}}"><br>
                         </div>
                         <div class="div_design">
                             <label for="categories">Product category:</label>
                             <select name="categories" id="text_color"required>
-                                <option value=""selected="">Select the category</option>
+                                <option value="{{$product->category}}"selected="">{{$product->category}}</option>
                                 @foreach ($categories as $categories)
                                     
                                 <option value="{{$categories->categories}}">{{$categories->categories}}</option>
                                 @endforeach
+                                
                             </select>
                         </div class="div_design">
                         <div class="div_design">
                             <label for="for">For:</label>
-                            <select name="categories" id="text_color"required>
-                                <option value=""selected="">Product for</option>
+                            <select name="for" id="text_color"required>
+                                <option value="{{$product->for}}"selected="">{{$product->for}}</option>
                                     
                                 <option value="men">Men</option>
                                 <option value="women">Women</option>
@@ -210,14 +212,16 @@
                         <div class="div_design">
                             <label for="description">Description:</label>
                             <input id="hide" type="text"disabled> <br>
-                            <textarea class="textarea" name="desc" placeholder="Description of product"required></textarea><br>
+                            <textarea class="textarea" name="desc" placeholder="Description of product"required>{{$product->description}}</textarea><br>
                         </div>
                         <div class="div_design">
-                            <label for="category">Product images:</label>
-                            <input type="file" name="image" id="photo" accept=".png, .jpg, .jpeg" onchange="readFile(this);" hidden required/>
+                            <label for="category">Change product images:</label>
+                            <input type="file" name="image" id="photo" accept=".png, .jpg, .jpeg" onchange="readFile(this);" hidden />
                             <label id="up_photo" for="photo">Choose file</label>
                             <div id="status"></div>
-                            <div id="photos" class="row"></div>
+                            <div id="photos" class="row">
+                                <img src="/product/{{$product->image}}" class="img-thumbnail">
+                            </div>
                         
 
                         
@@ -247,7 +251,7 @@
                     var reader = new FileReader();
     
                     reader.onload = function (e) {
-                $("#photos").append('<img src="'+e.target.result+'" class="img-thumbnail">');
+                $("#photos").append('Replace image? <img src="'+e.target.result+'" class="img-thumbnail">');
                     };
     
                     reader.readAsDataURL(input.files[x]);

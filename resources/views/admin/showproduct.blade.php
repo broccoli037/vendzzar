@@ -31,6 +31,7 @@
         .h2font{
             font-size: 40px;
             text-align: center;
+            padding: 10px;
         }
         input[type=text]{
             border-radius: 10px;
@@ -88,7 +89,8 @@
             border-radius: 10px;
         }
         .table{
-            padding: 2%;
+            padding: 10%;
+            width: 80%
             
         }
         label{
@@ -143,6 +145,24 @@
             opacity: 0;
         }
         
+        th{
+            border-bottom: 1px solid #454545;
+            color: #FFA559;
+            
+        }
+        td{
+            text-align: left;
+        }
+        #proimg{
+            border-radius: 0%;
+            width: 80px;
+            height: 80px;
+            transition: transform .2s;
+        }
+        #proimg:hover{
+            transform: scale(3);
+        }
+        
         
     </style>
 </head>
@@ -157,74 +177,40 @@
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper">
-                @if(session()->has('message'))
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                    {{session()->get('message')}}
-                </div>
-                @endif
-                <div class="div_center">
-                    <h2 class="h2font">Add Product</h2>
-                    <br>
-                    <form action="{{url('/add_product')}}"method="POST"enctype="multipart/form-data">
-                        @csrf
-                        <div class="div_design">
-                            <label for="title">Product Title:</label>
-                            <input type="text" name="title" placeholder="Add title" required><br>
-                        </div>
+                <h2 class="h2font">Products</h2>
+               
+                <table class="center table">
+                    <tr>
+                        <th>Product Title</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Category</th>
+                        <th>For</th>
+                        <th>Price</th>
+                        <th>Discount Price</th>
+                        <th>Product Image</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                         
-                        <div class="div_design">
-                            <label for="price">Price (in Rs.):</label>
-                            <input id="price" type="number" name="price" placeholder="Price" required><br>
-                        </div>
-                        <div class="div_design">
-                            <label for="quantity">Quantity:</label>
-                            <input type="number" name="quantity" min="0" placeholder="In stock quantity"required><br>
-                        </div>
-                        <div class="div_design">
-                            <label for="dis">Discounted price:</label>
-                            <input type="number" name="dis" placeholder="Discounted price"><br>
-                        </div>
-                        <div class="div_design">
-                            <label for="categories">Product category:</label>
-                            <select name="categories" id="text_color"required>
-                                <option value=""selected="">Select the category</option>
-                                @foreach ($categories as $categories)
-                                    
-                                <option value="{{$categories->categories}}">{{$categories->categories}}</option>
-                                @endforeach
-                            </select>
-                        </div class="div_design">
-                        <div class="div_design">
-                            <label for="for">For:</label>
-                            <select name="categories" id="text_color"required>
-                                <option value=""selected="">Product for</option>
-                                    
-                                <option value="men">Men</option>
-                                <option value="women">Women</option>
-                                <option value="unisex">unisex</option>
-                                
-                            </select>
-                        </div>
-                        
-                        <div class="div_design">
-                            <label for="description">Description:</label>
-                            <input id="hide" type="text"disabled> <br>
-                            <textarea class="textarea" name="desc" placeholder="Description of product"required></textarea><br>
-                        </div>
-                        <div class="div_design">
-                            <label for="category">Product images:</label>
-                            <input type="file" name="image" id="photo" accept=".png, .jpg, .jpeg" onchange="readFile(this);" hidden required/>
-                            <label id="up_photo" for="photo">Choose file</label>
-                            <div id="status"></div>
-                            <div id="photos" class="row"></div>
-                        
+                    </tr>
 
-                        
-                        
-                        <input type="submit" name="submit">
-                    </form>
-                </div>
+                    @foreach($product as $product)
+                    <tr>
+                        <td><b>{{$product->title}}</b></td>
+                        <td>{{$product->description}}</td>
+                        <td>{{$product->quantity}}</td>
+                        <td>{{$product->category}}</td>
+                        <td>{{$product->for}}</td>
+                        <td>{{$product->price}}</td>
+                        <td>{{$product->discount_price}}</td>
+                        <td>
+                            <img id="proimg" src="/product/{{$product->image}}">
+                        </td>
+                        <td><a class="btn btn-success" href="{{url('update_product',$product->id)}}">Edit</a></td>
+                        <td><a onclick="return confirm('Sure DELETE?')" class="btn btn-danger"href="{{url('delete_product',$product->id)}},{{$product->image}}">Delete</a></td>
+                    </tr>
+                    @endforeach
+                </table>
                
             </div>
           </div>
@@ -237,25 +223,7 @@
       </div>
       <!-- page-body-wrapper ends -->
     </div>
-    <script>
-        function readFile(input) {
-          $("#status").html('Processing...');
-        counter = input.files.length;
-            for(x = 0; x<counter; x++){
-                if (input.files && input.files[x]) {
     
-                    var reader = new FileReader();
-    
-                    reader.onload = function (e) {
-                $("#photos").append('<img src="'+e.target.result+'" class="img-thumbnail">');
-                    };
-    
-                    reader.readAsDataURL(input.files[x]);
-                }
-        }
-        if(counter == x){$("#status").html('');}
-      }
-    </script>
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="admin/assets/vendors/js/vendor.bundle.base.js"></script>
